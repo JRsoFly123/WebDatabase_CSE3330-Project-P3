@@ -32,6 +32,15 @@ def add_student():
         stSem = details['StSem']
         stYear = details['StYear']
         supervisor = details['Supervisor']
+        scholarship_t = details['Scholarship_Type']
+        scholarship_s = details['Scholarship_Source']
+        cursor = mysql.connection.cursor()
+        cursor.execute("INSERT INTO `phdstudent`(`StudentId`, `FName`, `LName`, `StSem`, `StYear`, `Supervisor`) VALUES"
+                       " ('"+stuid+"','"+fName+"','"+lName+"','"+stSem+"','"+stYear+"','"+supervisor+"')")
+        cursor.execute("INSERT INTO `scholarshipsupport`(`StudentId`, `Type`, `Source`) VALUES ('"+stuid+"','"+scholarship_t+"','"+scholarship_s+"')")
+        cursor.execute("INSERT INTO `phdcommittee`(`StudentId`, `InstructorId`) VALUES ('"+stuid+"','"+supervisor+"')")
+        mysql.connection.commit()
+        cursor.close()
         return 'success'
     return render_template("add_student.html")
 
