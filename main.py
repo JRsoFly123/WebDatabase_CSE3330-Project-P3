@@ -18,6 +18,23 @@ def example():
     return render_template("demo.html", instructors=instructors)
 
 # This function must:
+# - Get user input for a GRA student ID
+# - Display Grant Title, Type and Account No. of Grant
+@app.route('/display_grant',methods=['GET','POST'])
+def display_grant():
+    if request.method == "POST":
+        # Fetching the data from the form
+        details = request.form
+        stuid = details['StudentId']
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute("SELECT g.GrantTitle, g.Type, g.AccountNo FROM gra as gr join `grants` as g on gr.Funding = g.AccountNo WHERE gr.StudentId = '"+stuid+"'")
+        grant = cursor.fetchall()
+        return render_template("display_grant.html", grant=grant)
+    return render_template("get_graID.html")
+
+
+
+# This function must:
 # - Add a student into the database
 # - Link the new student with an existing scholarship
 # - Add committee members for the student in the PhDCommittee table
@@ -36,9 +53,9 @@ def add_student():
         scholarship_s = details['Scholarship_Source']
         cursor = mysql.connection.cursor()
         cursor.execute("INSERT INTO `phdstudent`(`StudentId`, `FName`, `LName`, `StSem`, `StYear`, `Supervisor`) VALUES"
-                       " ('"+stuid+"','"+fName+"','"+lName+"','"+stSem+"','"+stYear+"','"+supervisor+"')")
-        cursor.execute("INSERT INTO `scholarshipsupport`(`StudentId`, `Type`, `Source`) VALUES ('"+stuid+"','"+scholarship_t+"','"+scholarship_s+"')")
-        cursor.execute("INSERT INTO `phdcommittee`(`StudentId`, `InstructorId`) VALUES ('"+stuid+"','"+supervisor+"')")
+                       " ('"+stuid+"','"+fName+"','"+lName+"','"+stSem+"','"+stYear+"','"+supervisor+"');")
+        cursor.execute("INSERT INTO `phdcommittee`(`StudentId`, `InstructorId`) VALUES ('"+stuid+"','"+supervisor+"');")
+        cursor.execute("INSERT INTO `scholarshipsupport`(`StudentId`, `Type`, `Source`) VALUES ('"+stuid+"','"+scholarship_t+"','"+scholarship_s+"');")
         mysql.connection.commit()
         cursor.close()
         return 'success'
