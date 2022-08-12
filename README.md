@@ -8,7 +8,7 @@ constraints:</p>
 values for all attributes in the PhdStudent table. Link the new 
 student with an existing scholarship and also add committee 
 members for the student in the PhDCommittee table.<ul> 
-<li>A whole page called "Insert New Student" is used to get the info of
+<li>A whole page called "Insert Student" is used to get the info of
 the student using text inputs and a number input for the Semester Year</li>
 <li> A query is then ran linking inserting the student in the tables
 `phpStudent`,`scholarshipSupport` and `phdCommittee` a committing it to
